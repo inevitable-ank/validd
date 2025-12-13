@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 
 export default function LoginScreen() {
-  const [phoneNumber, setPhoneNumber] = useState('+91');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const router = useRouter();
 
   const handleGetStarted = () => {
@@ -42,15 +42,29 @@ export default function LoginScreen() {
             className="bg-[#2A2A2A] rounded-xl px-4 py-4"
             style={{ minHeight: 56 }}
           >
-            <TextInput
-              value={phoneNumber}
-              onChangeText={setPhoneNumber}
-              placeholder="Enter Phone Number"
-              placeholderTextColor="#9BA1A6"
-              keyboardType="phone-pad"
-              className="text-white text-lg"
+            {/* Label inside input box at top */}
+            <Text 
+              className="text-sm text-gray-400 mb-2"
               style={{ fontFamily: 'System' }}
-            />
+            >
+              Enter Phone Number
+            </Text>
+            {/* Input value below label */}
+            <View className="flex-row items-center">
+              <Text 
+                className="text-white text-lg mr-2"
+                style={{ fontFamily: 'System' }}
+              >
+                +91
+              </Text>
+              <TextInput
+                value={phoneNumber}
+                onChangeText={setPhoneNumber}
+                keyboardType="phone-pad"
+                className="text-white text-lg flex-1"
+                style={{ fontFamily: 'System', padding: 0 }}
+              />
+            </View>
           </View>
         </View>
 
