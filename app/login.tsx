@@ -19,17 +19,17 @@ export default function LoginScreen() {
       className="flex-1 bg-[#1F1F1F]"
       edges={['top', 'bottom']}
     >
-      <View className="flex-1 px-6 pt-12">
-        {/* Header Section */}
-        <View className="mb-12">
+      <View className="flex-1 px-6 justify-center">
+        {/* Header Section - Centered */}
+        <View className="mb-12 items-center">
           <Text 
-            className="text-4xl font-bold text-white mb-3"
+            className="text-3xl font-bold text-white mb-3 text-center"
             style={{ fontFamily: 'System' }}
           >
             Invest Smarter with AI
           </Text>
           <Text 
-            className="text-base text-gray-400"
+            className="text-base text-gray-400 text-center"
             style={{ fontFamily: 'System' }}
           >
             SEBI Registered - INH000013475
@@ -38,12 +38,6 @@ export default function LoginScreen() {
 
         {/* Input Field Section */}
         <View className="mb-6">
-          <Text 
-            className="text-sm text-gray-400 mb-2 px-1"
-            style={{ fontFamily: 'System' }}
-          >
-            Enter Phone Number
-          </Text>
           <View 
             className="bg-[#2A2A2A] rounded-xl px-4 py-4"
             style={{ minHeight: 56 }}
@@ -51,7 +45,7 @@ export default function LoginScreen() {
             <TextInput
               value={phoneNumber}
               onChangeText={setPhoneNumber}
-              placeholder=""
+              placeholder="Enter Phone Number"
               placeholderTextColor="#9BA1A6"
               keyboardType="phone-pad"
               className="text-white text-lg"
@@ -60,10 +54,10 @@ export default function LoginScreen() {
           </View>
         </View>
 
-        {/* Get Started Button */}
+        {/* Get Started Button - More Rounded */}
         <Pressable
           onPress={handleGetStarted}
-          className="bg-[#2A2A2A] rounded-xl py-4 flex-row items-center justify-center"
+          className="bg-[#2A2A2A] rounded-full py-4 flex-row items-center justify-center"
           style={{ minHeight: 56 }}
         >
           <Text 
