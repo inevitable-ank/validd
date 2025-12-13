@@ -1,9 +1,6 @@
-import { StyleSheet, ScrollView, View, Pressable } from 'react-native';
+import { ScrollView, View, Pressable, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { Colors } from '@/constants/theme';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 
 interface StoryItem {
@@ -60,117 +57,124 @@ const updates: UpdateItem[] = [
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
-  const backgroundColor = isDark ? '#151718' : '#FFFFFF';
-  const textColor = isDark ? '#FFFFFF' : '#000000';
-  const sectionBgColor = isDark ? '#1F1F1F' : '#F5F5F5';
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor }]} edges={['top']}>
+    <SafeAreaView className="flex-1 bg-white dark:bg-[#151718]" edges={['top']}>
       <ScrollView 
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
+        className="flex-1"
+        contentContainerStyle={{ paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}
       >
         {/* Header Section */}
-        <View style={styles.header}>
-          <ThemedText style={[styles.greeting, { color: textColor }]} numberOfLines={1}>
+        <View className="px-4 pt-4 pb-6">
+          <Text className="text-[32px] font-bold mb-2 leading-[42px] min-h-[42px] text-black dark:text-white" numberOfLines={1}>
             Hi, Ankit 👏
-          </ThemedText>
-          <ThemedText style={[styles.subtitle, { color: textColor }]}>
+          </Text>
+          <Text className="text-sm opacity-80 text-black dark:text-white">
             Our AI advisor is here to help you!
-          </ThemedText>
+          </Text>
         </View>
 
         {/* Story-like Circular Icons */}
         <ScrollView 
           horizontal 
           showsHorizontalScrollIndicator={false}
-          style={styles.storiesContainer}
-          contentContainerStyle={styles.storiesContent}
+          className="mb-6"
+          contentContainerStyle={{ paddingHorizontal: 16, gap: 16 }}
         >
           {stories.map((story) => (
-            <View key={story.id} style={styles.storyItem}>
-              <View style={[styles.storyCircle, { borderColor: story.borderColor }]}>
-                <View style={[styles.storyInnerCircle, { backgroundColor: '#FFFFFF' }]}>
+            <View key={story.id} className="items-center w-20">
+              <View 
+                className="w-[70px] h-[70px] rounded-full border-2 justify-center items-center mb-2"
+                style={{ borderColor: story.borderColor }}
+              >
+                <View className="w-[60px] h-[60px] rounded-full justify-center items-center overflow-hidden bg-white">
                   <IconSymbol 
                     name="person.fill" 
                     size={30} 
-                    color={isDark ? '#D3D3D3' : '#D3D3D3'} 
+                    color="#D3D3D3" 
                   />
                   {story.hasAddButton && (
-                    <View style={[styles.addButton, { borderColor: backgroundColor }]}>
+                    <View 
+                      className="absolute -bottom-0.5 -right-0.5 w-6 h-6 rounded-xl bg-[#007AFF] justify-center items-center border-2"
+                      style={{ borderColor: isDark ? '#151718' : '#FFFFFF' }}
+                    >
                       <IconSymbol name="plus" size={12} color="#FFFFFF" />
                     </View>
                   )}
                 </View>
               </View>
-              <ThemedText style={[styles.storyLabel, { color: textColor }]}>
+              <Text className="text-xs text-center text-black dark:text-white">
                 {story.label}
-              </ThemedText>
+              </Text>
             </View>
           ))}
         </ScrollView>
 
         {/* Chats Section */}
-        <View style={styles.section}>
-          <ThemedText style={[styles.sectionTitle, { color: textColor }]}>Chats</ThemedText>
+        <View className="px-4 mb-6">
+          <Text className="text-lg font-semibold mb-3 text-black dark:text-white">Chats</Text>
           {chats.map((chat) => (
             <Pressable
               key={chat.id}
-              style={({ pressed }) => [
-                styles.chatItem,
-                { backgroundColor: pressed ? sectionBgColor : 'transparent' },
-              ]}
+              className="flex-row items-center py-3 px-2 rounded-lg mb-1"
+              style={({ pressed }) => ({
+                backgroundColor: pressed 
+                  ? (isDark ? '#1F1F1F' : '#F5F5F5') 
+                  : 'transparent'
+              })}
               onPress={() => {
                 // Navigate to chat screen - to be implemented
               }}
             >
-              <View style={styles.chatIconContainer}>
-                <ThemedText style={styles.chatIconText}>AI</ThemedText>
+              <View className="w-14 h-14 rounded-full justify-center items-center mr-3 relative bg-[#FF4444]">
+                <Text className="text-xl font-bold text-white">AI</Text>
               </View>
-              <View style={styles.chatContent}>
-                <View style={styles.chatHeader}>
-                  <ThemedText style={[styles.chatName, { color: textColor }]}>
+              <View className="flex-1">
+                <View className="flex-row justify-between items-center mb-1">
+                  <Text className="text-base font-semibold text-black dark:text-white">
                     {chat.name}
-                  </ThemedText>
-                  <ThemedText style={[styles.chatTime, { color: textColor }]}>
+                  </Text>
+                  <Text className="text-xs opacity-70 text-black dark:text-white">
                     {chat.time}
-                  </ThemedText>
+                  </Text>
                 </View>
-                <ThemedText style={[styles.chatMessage, { color: textColor }]}>
+                <Text className="text-sm opacity-80 text-black dark:text-white">
                   {chat.lastMessage}
-                </ThemedText>
+                </Text>
               </View>
             </Pressable>
           ))}
         </View>
 
         {/* Updates Section */}
-        <View style={styles.section}>
-          <ThemedText style={[styles.sectionTitle, { color: textColor }]}>Updates</ThemedText>
+        <View className="px-4 mb-6">
+          <Text className="text-lg font-semibold mb-3 text-black dark:text-white">Updates</Text>
           {updates.map((update) => (
             <Pressable
               key={update.id}
-              style={({ pressed }) => [
-                styles.updateItem,
-                { backgroundColor: pressed ? sectionBgColor : 'transparent' },
-              ]}
+              className="flex-row items-center py-3 px-2 rounded-lg mb-1"
+              style={({ pressed }) => ({
+                backgroundColor: pressed 
+                  ? (isDark ? '#1F1F1F' : '#F5F5F5') 
+                  : 'transparent'
+              })}
             >
-              <View style={styles.updateIconContainer}>
-                <ThemedText style={styles.updateIconText}>{update.icon}</ThemedText>
+              <View className="w-12 h-12 justify-center items-center mr-3">
+                <Text className="text-[28px]">{update.icon}</Text>
               </View>
-              <View style={styles.updateContent}>
-                <View style={styles.updateHeader}>
-                  <ThemedText style={[styles.updateName, { color: textColor }]}>
+              <View className="flex-1">
+                <View className="flex-row justify-between items-center mb-1">
+                  <Text className="text-base font-semibold text-black dark:text-white">
                     {update.name}
-                  </ThemedText>
-                  <ThemedText style={[styles.updateDate, { color: textColor }]}>
+                  </Text>
+                  <Text className="text-xs opacity-70 text-black dark:text-white">
                     {update.date}
-                  </ThemedText>
+                  </Text>
                 </View>
-                <ThemedText style={[styles.updateMessage, { color: textColor }]}>
+                <Text className="text-sm opacity-80 text-black dark:text-white">
                   {update.message}
-                </ThemedText>
+                </Text>
               </View>
             </Pressable>
           ))}
@@ -179,185 +183,3 @@ export default function HomeScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingBottom: 20,
-  },
-  header: {
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 24,
-  },
-  greeting: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    lineHeight: 42,
-    minHeight: 42,
-  },
-  subtitle: {
-    fontSize: 14,
-    opacity: 0.8,
-  },
-  storiesContainer: {
-    marginBottom: 24,
-  },
-  storiesContent: {
-    paddingHorizontal: 16,
-    gap: 16,
-  },
-  storyItem: {
-    alignItems: 'center',
-    width: 80,
-  },
-  storyCircle: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    borderWidth: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  storyInnerCircle: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
-  addButton: {
-    position: 'absolute',
-    bottom: -2,
-    right: -2,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: '#007AFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-  },
-  storyLabel: {
-    fontSize: 12,
-    textAlign: 'center',
-  },
-  section: {
-    paddingHorizontal: 16,
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 12,
-  },
-  chatItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 8,
-    borderRadius: 8,
-    marginBottom: 4,
-  },
-  chatIconContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-    position: 'relative',
-    backgroundColor: '#FF4444',
-  },
-  chatIconText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-  },
-  aiBadge: {
-    position: 'absolute',
-    bottom: -2,
-    right: -2,
-    backgroundColor: '#007AFF',
-    borderRadius: 10,
-    width: 20,
-    height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#151718',
-  },
-  aiText: {
-    color: '#FFFFFF',
-    fontSize: 10,
-    fontWeight: 'bold',
-  },
-  chatContent: {
-    flex: 1,
-  },
-  chatHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
-  chatName: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  chatTime: {
-    fontSize: 12,
-    opacity: 0.7,
-  },
-  chatMessage: {
-    fontSize: 14,
-    opacity: 0.8,
-  },
-  updateItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 8,
-    borderRadius: 8,
-    marginBottom: 4,
-  },
-  updateIconContainer: {
-    width: 48,
-    height: 48,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  updateIconText: {
-    fontSize: 28,
-  },
-  updateContent: {
-    flex: 1,
-  },
-  updateHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
-  updateName: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  updateDate: {
-    fontSize: 12,
-    opacity: 0.7,
-  },
-  updateMessage: {
-    fontSize: 14,
-    opacity: 0.8,
-  },
-});

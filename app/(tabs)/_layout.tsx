@@ -4,7 +4,6 @@ import { View, Text } from 'react-native';
 
 import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export default function TabLayout() {
@@ -45,23 +44,14 @@ export default function TabLayout() {
         options={{
           title: 'Trades',
           tabBarIcon: ({ color }) => (
-            <View style={{ position: 'relative' }}>
+            <View className="relative">
               <IconSymbol size={24} name="chart.bar.fill" color={color} />
               <View
-                style={{
-                  position: 'absolute',
-                  top: -6,
-                  right: -6,
-                  backgroundColor: '#4CAF50',
-                  borderRadius: 10,
-                  width: 18,
-                  height: 18,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderWidth: 2,
-                  borderColor: colorScheme === 'dark' ? '#1F1F1F' : '#F5F5F5',
-                }}>
-                <Text style={{ color: '#FFFFFF', fontSize: 10, fontWeight: 'bold' }}>2</Text>
+                className={`absolute -top-1.5 -right-1.5 w-[18px] h-[18px] rounded-[10px] bg-[#4CAF50] justify-center items-center border-2 ${
+                  colorScheme === 'dark' ? 'border-[#1F1F1F]' : 'border-[#F5F5F5]'
+                }`}
+              >
+                <Text className="text-white text-[10px] font-bold">2</Text>
               </View>
             </View>
           ),
@@ -79,6 +69,12 @@ export default function TabLayout() {
         options={{
           title: 'Settings',
           tabBarIcon: ({ color }) => <IconSymbol size={24} name="gearshape.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="explore"
+        options={{
+          href: null, // Hide from tab bar
         }}
       />
     </Tabs>
