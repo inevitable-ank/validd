@@ -15,12 +15,17 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="splash" options={{ headerShown: false }} />
+      <Stack
+        screenOptions={{
+          contentStyle: { backgroundColor: '#1F1F1F' }, // Match splash/login background
+        }}
+      >
+        <Stack.Screen name="splash" options={{ headerShown: false, animation: 'fade' }} />
+        <Stack.Screen name="login" options={{ headerShown: false, animation: 'fade' }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
       </Stack>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
     </ThemeProvider>
   );
 }

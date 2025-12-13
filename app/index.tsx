@@ -25,9 +25,8 @@ export default function Index() {
         // Cold start - show splash screen
         router.replace('/splash');
       } else {
-        // Warm start - go directly to tabs
-        // Change this to '/login' when you create the login page
-        router.replace('/(tabs)');
+        // Warm start - go directly to login (or tabs if already logged in)
+        router.replace('/login');
       }
     } catch (error) {
       console.error('Error checking app state:', error);
@@ -38,7 +37,7 @@ export default function Index() {
     }
   };
 
-  // Show loading indicator while checking
+  // Show loading indicator while checking - match splash background
   if (isChecking) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#1F1F1F' }}>

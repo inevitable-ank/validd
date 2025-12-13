@@ -1,60 +1,75 @@
-import { View, Text } from 'react-native';
-import { useEffect } from 'react';
+import { View, Text, Animated } from 'react-native';
+import { useEffect, useRef } from 'react';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SplashScreen() {
   const router = useRouter();
+  const fadeAnim = useRef(new Animated.Value(1)).current; // Start fully visible
 
   useEffect(() => {
-    // Show splash for 2-3 seconds, then navigate to login/main
-    const timer = setTimeout(() => {
-      // Navigate to login page (you'll create this next)
-      // For now, navigate to tabs - you can change this to login route later
-      router.replace('/(tabs)');
-    }, 2500);
+    // Show splash for 2 seconds, then fade out over 0.5 seconds, then navigate
+    const showTimer = setTimeout(() => {
+      // Start fade-out animation
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 500, // 0.5 seconds fade
+        useNativeDriver: true,
+      }).start(() => {
+        // Navigate after fade completes
+        router.replace('/login');
+      });
+    }, 2000); // Show for 2 seconds
 
-    return () => clearTimeout(timer);
-  }, [router]);
+    return () => clearTimeout(showTimer);
+  }, [router, fadeAnim]);
 
   return (
-    <SafeAreaView 
-      className="flex-1 bg-[#1F1F1F]"
-      edges={['top', 'bottom']}
+    <Animated.View 
+      style={{ 
+        flex: 1, 
+        backgroundColor: '#1F1F1F',
+        opacity: fadeAnim 
+      }}
     >
-      <View className="flex-1 justify-center items-center px-4">
-        {/* Main Title - Centered */}
-        <Text 
-          className="text-5xl font-bold text-white mb-4"
-          style={{ fontFamily: 'System' }}
-        >
-          Validd.in
-        </Text>
-
-        {/* Subtitle 1 - Below main title */}
-        <Text 
-          className="text-base text-gray-400 mb-16"
-          style={{ fontFamily: 'System' }}
-        >
-          SEBI Registered
-        </Text>
-
-        {/* Bottom Section - Positioned near bottom */}
-        <View className="absolute bottom-32 items-center">
+      <SafeAreaView 
+        className="flex-1"
+        edges={['top', 'bottom']}
+      >
+        <View className="flex-1 justify-center items-center px-4">
+          {/* Main Title - Centered */}
           <Text 
-            className="text-base text-gray-400 mb-3"
+            className="text-5xl font-bold text-white mb-4"
             style={{ fontFamily: 'System' }}
           >
-            SEBI Registration
+            Validd.in
           </Text>
+
+          {/* Subtitle 1 - Below main title */}
           <Text 
-            className="text-base font-bold text-white"
+            className="text-base text-gray-400 mb-16"
             style={{ fontFamily: 'System' }}
           >
-            INH000013475
+            SEBI Registered
           </Text>
+
+          {/* Bottom Section - Positioned near bottom */}
+          <View className="absolute bottom-32 items-center">
+            <Text 
+              className="text-base text-gray-400 mb-3"
+              style={{ fontFamily: 'System' }}
+            >
+              SEBI Registration
+            </Text>
+            <Text 
+              className="text-base font-bold text-white"
+              style={{ fontFamily: 'System' }}
+            >
+              INH000013475
+            </Text>
+          </View>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </Animated.View>
   );
 }
