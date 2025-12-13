@@ -40,7 +40,11 @@ export default function LoginScreen() {
         <View className="mb-6">
           <View 
             className="bg-[#2A2A2A] rounded-xl px-4 py-4"
-            style={{ minHeight: 56 }}
+            style={{ 
+              minHeight: 56,
+              borderWidth: 1,
+              borderColor: '#4A4A4A', // More greyish border
+            }}
           >
             {/* Label inside input box at top */}
             <Text 
@@ -71,7 +75,7 @@ export default function LoginScreen() {
         {/* Get Started Button - More Rounded */}
         <Pressable
           onPress={handleGetStarted}
-          className="bg-[#2A2A2A] rounded-full py-4 flex-row items-center justify-center"
+          className="bg-[#4A4A4A] rounded-full py-4 flex-row items-center justify-center"
           style={{ minHeight: 56 }}
         >
           <Text 
@@ -81,7 +85,7 @@ export default function LoginScreen() {
             Get Started
           </Text>
           <IconSymbol 
-            name="chevron.right" 
+            name="arrow.forward" 
             size={20} 
             color="#FFFFFF" 
           />
