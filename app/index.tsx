@@ -1,0 +1,51 @@
+import { useEffect, useState } from 'react';
+import { useRouter } from 'expo-router';
+import { View, ActivityIndicator } from 'react-native';
+import { AppStateManager } from '@/utils/app-state';
+
+/**
+ * Root index file that handles initial routing based on app state
+ * - Cold start: Shows splash screen
+ * - Warm start: Goes directly to tabs/login
+ */
+export default function Index() {
+  const router = useRouter();
+  const [isChecking, setIsChecking] = useState(true);
+
+  useEffect(() => {
+    checkAndNavigate();
+  }, []);
+
+  const checkAndNavigate = async () => {
+    try {
+      const appStateManager = AppStateManager.getInstance();
+      const isColdStart = await appStateManager.isColdStart();
+
+      if (isColdStart) {
+        // Cold start - show splash screen
+        router.replace('/splash');
+      } else {
+        // Warm start - go directly to tabs
+        // Change this to '/login' when you create the login page
+        router.replace('/(tabs)');
+      }
+    } catch (error) {
+      console.error('Error checking app state:', error);
+      // On error, default to splash screen
+      router.replace('/splash');
+    } finally {
+      setIsChecking(false);
+    }
+  };
+
+  // Show loading indicator while checking
+  if (isChecking) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#1F1F1F' }}>
+        <ActivityIndicator size="large" color="#FFFFFF" />
+      </View>
+    );
+  }
+
+  return null;
+}
