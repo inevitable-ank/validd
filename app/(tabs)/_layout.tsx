@@ -21,15 +21,20 @@ export default function TabLayout() {
           borderTopWidth: 1,
           borderTopColor: colorScheme === 'dark' ? '#2F2F2F' : '#E0E0E0',
           height: 60,
-          paddingBottom: 8,
-          paddingTop: 8,
+          paddingVertical: 8,
           elevation: 8,
           shadowOpacity: 0.1,
+        },
+        tabBarItemStyle: {
+          justifyContent: 'center',
+          alignItems: 'center',
+          paddingVertical: 0,
         },
         tabBarLabelStyle: {
           fontSize: 12,
           fontWeight: '500',
-          marginTop: 4,
+          marginTop: -3,
+          marginBottom: 0,
         },
       }}>
       <Tabs.Screen
