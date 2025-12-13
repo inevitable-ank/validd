@@ -1,35 +1,26 @@
-import { View, Text, Animated } from 'react-native';
-import { useEffect, useRef } from 'react';
+import { View, Text } from 'react-native';
+import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SplashScreen() {
   const router = useRouter();
-  const fadeAnim = useRef(new Animated.Value(1)).current; // Start fully visible
 
   useEffect(() => {
-    // Show splash for 2 seconds, then fade out over 0.5 seconds, then navigate
-    const showTimer = setTimeout(() => {
-      // Start fade-out animation
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 500, // 0.5 seconds fade
-        useNativeDriver: true,
-      }).start(() => {
-        // Navigate after fade completes
-        router.replace('/login');
-      });
-    }, 2000); // Show for 2 seconds
+    // Show splash for 2 seconds, then navigate
+    // Let Stack's fade animation handle the transition smoothly
+    const timer = setTimeout(() => {
+      router.replace('/login');
+    }, 2000);
 
-    return () => clearTimeout(showTimer);
-  }, [router, fadeAnim]);
+    return () => clearTimeout(timer);
+  }, [router]);
 
   return (
-    <Animated.View 
+    <View 
       style={{ 
         flex: 1, 
         backgroundColor: '#1F1F1F',
-        opacity: fadeAnim 
       }}
     >
       <SafeAreaView 
@@ -70,6 +61,6 @@ export default function SplashScreen() {
           </View>
         </View>
       </SafeAreaView>
-    </Animated.View>
+    </View>
   );
 }
