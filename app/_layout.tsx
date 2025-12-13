@@ -29,7 +29,7 @@ export default function RootLayout() {
           screenOptions={{
             contentStyle: { backgroundColor: '#1F1F1F' }, // Match splash/login background
             animation: 'fade', // Smooth fade transition
-            animationDuration: 300, // Faster transition
+            animationDuration: 600, // Slower, smoother transition
           }}
         >
           <Stack.Screen name="splash" options={{ headerShown: false }} />
