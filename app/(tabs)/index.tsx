@@ -73,7 +73,7 @@ export default function HomeScreen() {
       >
         {/* Header Section */}
         <View style={styles.header}>
-          <ThemedText style={[styles.greeting, { color: textColor }]}>
+          <ThemedText style={[styles.greeting, { color: textColor }]} numberOfLines={1}>
             Hi, Ankit 👏
           </ThemedText>
           <ThemedText style={[styles.subtitle, { color: textColor }]}>
@@ -199,6 +199,8 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: 'bold',
     marginBottom: 8,
+    lineHeight: 42,
+    minHeight: 42,
   },
   subtitle: {
     fontSize: 14,
