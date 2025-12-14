@@ -1,7 +1,6 @@
 import { View, Text } from 'react-native';
 import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { authService } from '@/services/auth.service';
 
 export default function SplashScreen() {
@@ -26,53 +25,49 @@ export default function SplashScreen() {
     return () => clearTimeout(timer);
   }, [router]);
 
+  // Using View instead of SafeAreaView - SafeAreaView was causing native crash
+  // SafeAreaProvider is in root layout, but SafeAreaView component still crashes
+  // Using NativeWind (Tailwind) classes to test if it works
   return (
     <View 
-      style={{ 
-        flex: 1, 
-        backgroundColor: '#1F1F1F',
-      }}
+      className="flex-1 bg-[#1F1F1F] pt-10 pb-5"
     >
-      <SafeAreaView 
-        className="flex-1"
-        edges={['top', 'bottom']}
-      >
-        <View className="flex-1 justify-center items-center px-4">
-          {/* Main Title - Centered */}
+      <View className="flex-1 justify-center items-center px-4">
+        {/* Main Title - Centered */}
+        <Text 
+          className="text-5xl font-bold text-white mb-4"
+          style={{ fontFamily: 'System' }}
+        >
+          Validd.in
+        </Text>
+
+        {/* Subtitle 1 - Below main title */}
+        <Text 
+          className="text-base text-gray-400 mb-16"
+          style={{ fontFamily: 'System' }}
+        >
+          SEBI Registered
+        </Text>
+
+        {/* Bottom Section - Positioned near bottom */}
+        <View className="absolute bottom-32 items-center">
           <Text 
-            className="text-5xl font-bold text-white mb-4"
+            className="text-base text-gray-400 mb-3"
             style={{ fontFamily: 'System' }}
           >
-            Validd.in
+            SEBI Registration
           </Text>
-
-          {/* Subtitle 1 - Below main title */}
           <Text 
-            className="text-base text-gray-400 mb-16"
+            className="text-base font-bold text-white"
             style={{ fontFamily: 'System' }}
           >
-            SEBI Registered
+            INH000013475
           </Text>
-
-          {/* Bottom Section - Positioned near bottom */}
-          <View className="absolute bottom-32 items-center">
-            <Text 
-              className="text-base text-gray-400 mb-3"
-              style={{ fontFamily: 'System' }}
-            >
-              SEBI Registration
-            </Text>
-            <Text 
-              className="text-base font-bold text-white"
-              style={{ fontFamily: 'System' }}
-            >
-              INH000013475
-            </Text>
-          </View>
         </View>
-      </SafeAreaView>
+      </View>
     </View>
   );
 }
+
 
 

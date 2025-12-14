@@ -1,5 +1,4 @@
 import { ScrollView, View, Pressable, Text } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 
@@ -58,8 +57,9 @@ export default function HomeScreen() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
 
+  // Using View instead of SafeAreaView - SafeAreaView was causing native crash
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-[#151718]" edges={['top']}>
+    <View className="flex-1 bg-white dark:bg-[#151718] pt-10">
       <ScrollView 
         className="flex-1"
         contentContainerStyle={{ paddingBottom: 20 }}
@@ -180,6 +180,6 @@ export default function HomeScreen() {
           ))}
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

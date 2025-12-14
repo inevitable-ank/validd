@@ -39,8 +39,8 @@ export class AppStateManager {
       this.handleAppStateChange.bind(this)
     );
 
-    // Mark app as active on initialization
-    this.markAppAsActive();
+    // DON'T mark as active here - we need to check cold start first
+    // This will be called after isColdStart() determines the state
   }
 
   private async handleAppStateChange(nextAppState: AppStateStatus) {
@@ -65,19 +65,23 @@ export class AppStateManager {
    */
   async isColdStart(): Promise<boolean> {
     try {
+      // IMPORTANT: Read the timestamp BEFORE marking as active
+      // This ensures we get the OLD timestamp, not a newly set one
+      
       // First, check if this is the very first launch
       const isFirstLaunch = await AsyncStorage.getItem(FIRST_LAUNCH_KEY);
       if (!isFirstLaunch) {
         // This is the first time the app is launched
         // Mark it so we know it's not the first time anymore
         await AsyncStorage.setItem(FIRST_LAUNCH_KEY, 'false');
-        // Mark as active for future checks
+        // Mark as active for future checks (AFTER checking)
         await this.markAppAsActive();
         // Always show splash on first launch
         return true;
       }
 
       // For subsequent launches, check the last active time
+      // Read this BEFORE marking as active to get the old timestamp
       const lastActiveTime = await AsyncStorage.getItem(IS_ACTIVE_KEY);
 
       // If no timestamp exists, it's definitely a cold start
@@ -92,9 +96,13 @@ export class AppStateManager {
       const timeDiff = Date.now() - parseInt(lastActiveTime, 10);
       const TWO_MINUTES = 2 * 60 * 1000; // 2 minutes in milliseconds
 
+      console.log('[AppStateManager] Last active time:', new Date(parseInt(lastActiveTime, 10)).toISOString());
+      console.log('[AppStateManager] Time difference:', Math.round(timeDiff / 1000), 'seconds');
+
       if (timeDiff > TWO_MINUTES) {
         // App was inactive for more than 2 minutes
         // Consider it a cold start (likely force-closed or removed from background)
+        console.log('[AppStateManager] Detected cold start (inactive > 2 minutes)');
         await AsyncStorage.removeItem(APP_STATE_KEY);
         await AsyncStorage.removeItem(IS_ACTIVE_KEY);
         // Mark as active now for future checks
@@ -103,11 +111,12 @@ export class AppStateManager {
       }
 
       // App was recently active (within 2 minutes), so it's a warm start
+      console.log('[AppStateManager] Detected warm start (inactive < 2 minutes)');
       // Update the timestamp to current time
       await this.markAppAsActive();
       return false;
     } catch (error) {
-      console.error('Error checking app state:', error);
+      console.error('[AppStateManager] Error checking app state:', error);
       // On error, default to cold start (show splash)
       // But still mark as active for future checks
       await this.markAppAsActive().catch(() => {});
@@ -133,5 +142,6 @@ export class AppStateManager {
     }
   }
 }
+
 
 

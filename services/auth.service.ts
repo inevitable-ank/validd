@@ -1,9 +1,53 @@
-import auth from '@react-native-firebase/auth';
 import { API_ENDPOINTS } from '@/config/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { checkFirebaseAvailability } from '@/utils/firebase-check';
 
 const JWT_TOKEN_KEY = '@validd_jwt_token';
 const USER_KEY = '@validd_user';
+
+// Lazy load Firebase Auth to avoid immediate native module initialization
+let authModule: any = null;
+let firebaseChecked = false;
+
+const getAuth = () => {
+  if (!authModule) {
+    try {
+      // First check if Firebase is available
+      if (!firebaseChecked) {
+        // We'll check synchronously here, but log a warning if it fails
+        try {
+          const firebaseApp = require('@react-native-firebase/app');
+          if (!firebaseApp.default) {
+            throw new Error('Firebase App not initialized');
+          }
+        } catch (e) {
+          console.error('[AuthService] Firebase App check failed:', e);
+          throw new Error('Firebase is not properly configured. Please rebuild the app.');
+        }
+        firebaseChecked = true;
+      }
+
+      authModule = require('@react-native-firebase/auth').default;
+      
+      if (!authModule) {
+        throw new Error('Firebase Auth module is null');
+      }
+
+      // Try to get auth instance to verify it's working
+      const auth = authModule();
+      if (!auth) {
+        throw new Error('Firebase Auth instance is null');
+      }
+
+      console.log('[AuthService] Firebase Auth loaded successfully');
+    } catch (error: any) {
+      console.error('[AuthService] Failed to load Firebase Auth:', error);
+      const errorMessage = error?.message || 'Unknown error';
+      throw new Error(`Firebase Auth is not available: ${errorMessage}. Please check your configuration and rebuild the app.`);
+    }
+  }
+  return authModule;
+};
 
 export interface AuthUser {
   id: string;
@@ -28,14 +72,23 @@ class AuthService {
    */
   async sendOTP(phoneNumber: string): Promise<void> {
     try {
+      // Check Firebase availability before proceeding
+      const firebaseCheck = await checkFirebaseAvailability();
+      if (!firebaseCheck.isAvailable) {
+        console.error('[AuthService] Firebase not available:', firebaseCheck.error);
+        throw new Error('Firebase is not properly configured. Please rebuild the app.');
+      }
+
       // Format phone number: ensure it starts with +
       const formattedPhone = phoneNumber.startsWith('+') ? phoneNumber : `+91${phoneNumber}`;
       
       // Send OTP - @react-native-firebase handles reCAPTCHA automatically
+      const auth = getAuth();
       const confirmation = await auth().signInWithPhoneNumber(formattedPhone);
       this.confirmation = confirmation;
     } catch (error: any) {
-      console.error('Error sending OTP:', error);
+      console.error('[AuthService] Error sending OTP:', error);
+      console.error('[AuthService] Error stack:', error?.stack);
       
       // Provide user-friendly error messages
       if (error.code === 'auth/invalid-phone-number') {
@@ -44,6 +97,9 @@ class AuthService {
         throw new Error('Too many requests. Please try again later.');
       } else if (error.code === 'auth/quota-exceeded') {
         throw new Error('SMS quota exceeded. Please try again later.');
+      } else if (error.message?.includes('Firebase') || error.message?.includes('not available')) {
+        // Re-throw Firebase configuration errors as-is
+        throw error;
       }
       
       throw new Error(error.message || 'Failed to send OTP. Please try again.');
@@ -150,6 +206,7 @@ class AuthService {
       await AsyncStorage.removeItem(USER_KEY);
       this.confirmation = null;
       // Sign out from Firebase
+      const auth = getAuth();
       await auth().signOut();
     } catch (error) {
       console.error('Error signing out:', error);
@@ -178,4 +235,5 @@ class AuthService {
 }
 
 export const authService = new AuthService();
+
 

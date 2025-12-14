@@ -1,9 +1,9 @@
 import { ScrollView, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SettingsScreen() {
+  // Using View instead of SafeAreaView - SafeAreaView was causing native crash
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-[#151718]" edges={['top']}>
+    <View className="flex-1 bg-white dark:bg-[#151718] pt-10">
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         <View className="mb-6">
           <Text className="text-[32px] font-bold text-black dark:text-white">
@@ -14,6 +14,6 @@ export default function SettingsScreen() {
           </Text>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
