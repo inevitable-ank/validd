@@ -2,15 +2,25 @@ import { View, Text } from 'react-native';
 import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { authService } from '@/services/auth.service';
 
 export default function SplashScreen() {
   const router = useRouter();
 
   useEffect(() => {
-    // Show splash for 2 seconds, then navigate
-    // Let Stack's fade animation handle the transition smoothly
-    const timer = setTimeout(() => {
-      router.replace('/login');
+    // Show splash for 2 seconds, then check auth and navigate
+    const timer = setTimeout(async () => {
+      try {
+        const isAuthenticated = await authService.isAuthenticated();
+        if (isAuthenticated) {
+          router.replace('/(tabs)');
+        } else {
+          router.replace('/login');
+        }
+      } catch (error) {
+        console.error('Error checking auth:', error);
+        router.replace('/login');
+      }
     }, 2000);
 
     return () => clearTimeout(timer);
@@ -64,3 +74,4 @@ export default function SplashScreen() {
     </View>
   );
 }
+

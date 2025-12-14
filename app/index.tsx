@@ -18,15 +18,21 @@ export default function Index() {
 
   const checkAndNavigate = async () => {
     try {
+      const { authService } = await import('@/services/auth.service');
       const appStateManager = AppStateManager.getInstance();
       const isColdStart = await appStateManager.isColdStart();
+      const isAuthenticated = await authService.isAuthenticated();
 
       if (isColdStart) {
         // Cold start - show splash screen
         router.replace('/splash');
       } else {
-        // Warm start - go directly to login (or tabs if already logged in)
-        router.replace('/login');
+        // Warm start - check auth and route accordingly
+        if (isAuthenticated) {
+          router.replace('/(tabs)');
+        } else {
+          router.replace('/login');
+        }
       }
     } catch (error) {
       console.error('Error checking app state:', error);
@@ -48,3 +54,4 @@ export default function Index() {
 
   return null;
 }
+
