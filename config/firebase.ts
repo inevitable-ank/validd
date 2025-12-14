@@ -3,3 +3,4 @@
 // This file is kept for compatibility but Firebase is auto-initialized
 
 export {};
+
